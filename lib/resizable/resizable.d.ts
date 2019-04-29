@@ -87,7 +87,6 @@ export interface ResizableProps {
 }
 interface State {
     isResizing: boolean;
-    resizeCursor: string;
     direction: Direction;
     original: {
         x: number;
@@ -149,7 +148,6 @@ export declare class Resizable extends React.Component<ResizableProps, State> {
     componentDidMount(): void;
     componentWillReceiveProps(next: ResizableProps): void;
     componentWillUnmount(): void;
-    componentDidUpdate(): void;
     createSizeForCssProperty(newSize: number | string, kind: 'width' | 'height'): number | string;
     calculateNewMaxFromBoundary(maxWidth?: number, maxHeight?: number): {
         maxWidth: number | undefined;

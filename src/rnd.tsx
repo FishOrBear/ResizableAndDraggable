@@ -1,8 +1,9 @@
 import * as React from "react";
 import { DraggableEventHandler } from "react-draggable";
 import Draggable from "react-draggable";
-import { Direction } from "../resizable/resizer";
-import { ResizeDirection, Resizable } from "../resizable/resizable";
+import { Direction } from "./resizable/resizer";
+import { ResizeDirection, Resizable } from "./resizable/resizable";
+import { UpdateCursorMaskElementDisplay } from "./cursorMask";
 
 //基于 https://github.com/bokuweb/react-rnd 2019/2/22
 
@@ -286,6 +287,8 @@ export class Rnd extends React.Component<Props, State> {
 
     onDragStart(e: RndDragEvent, data: DraggableData)
     {
+        UpdateCursorMaskElementDisplay(true, "move");
+
         if (this.props.onDragStart)
         {
             this.props.onDragStart(e, data);
@@ -358,6 +361,7 @@ export class Rnd extends React.Component<Props, State> {
 
     onDragStop(e: RndDragEvent, data: DraggableData)
     {
+        UpdateCursorMaskElementDisplay(false);
         if (this.props.onDragStop)
         {
             const { left, top } = this.getOffsetFromParent();

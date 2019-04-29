@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { Resizer, Direction, DirectionKey, UpdateStyle } from './resizer';
+import { UpdateCursorMaskElementDisplay } from '../cursorMask';
 
 //基于 https://github.com/bokuweb/re-resizable 2019.3.17
-
-
-//全屏光标遮罩层
-let cursorMask: HTMLElement;
 
 function memoize<T>(fn: T): T
 {
@@ -142,7 +139,6 @@ export interface ResizableProps
 interface State
 {
   isResizing: boolean;
-  resizeCursor: string;
   direction: Direction;
   original: {
     x: number;
@@ -411,7 +407,6 @@ export class Resizable extends React.Component<ResizableProps, State> {
     super(props);
     this.state = {
       isResizing: false,
-      resizeCursor: 'auto',
       width:
         typeof (this.propsSize && this.propsSize.width) === 'undefined'
           ? 'auto'
@@ -523,20 +518,6 @@ export class Resizable extends React.Component<ResizableProps, State> {
       element.className += baseClassName;
     }
     parent.appendChild(element);
-
-    if (!cursorMask)
-    {
-      cursorMask = document.createElement("div");
-      cursorMask.style.position = "fixed";
-      cursorMask.style.left = "0px";
-      cursorMask.style.top = "0px";
-      cursorMask.style.right = "0px";
-      cursorMask.style.bottom = "0px";
-      cursorMask.style.zIndex = "9999";
-      cursorMask.style.display = "none";
-
-      document.body.append(cursorMask);
-    }
   }
 
   public componentWillReceiveProps(next: ResizableProps)
@@ -564,12 +545,6 @@ export class Resizable extends React.Component<ResizableProps, State> {
       }
       parent.removeChild(this.base);
     }
-  }
-
-  public componentDidUpdate()
-  {
-    cursorMask.style.display = this.state.isResizing ? "block" : "none";
-    cursorMask.style.cursor = this.state.resizeCursor || 'auto';
   }
 
   public createSizeForCssProperty(newSize: number | string, kind: 'width' | 'height'): number | string
@@ -779,9 +754,9 @@ export class Resizable extends React.Component<ResizableProps, State> {
         height: this.size.height,
       },
       isResizing: true,
-      resizeCursor: window.getComputedStyle(event.target as HTMLElement).cursor || 'auto',
       direction,
     });
+    UpdateCursorMaskElementDisplay(true, window.getComputedStyle(event.target as HTMLElement).cursor || 'auto');
   }
 
   public onMouseMove(event: MouseEvent | TouchEvent)
@@ -902,7 +877,8 @@ export class Resizable extends React.Component<ResizableProps, State> {
     {
       this.setState(this.props.size);
     }
-    this.setState({ isResizing: false, resizeCursor: 'auto' });
+    this.setState({ isResizing: false });
+    UpdateCursorMaskElementDisplay(false, "auto");
   }
 
   public updateSize(size: Size)
