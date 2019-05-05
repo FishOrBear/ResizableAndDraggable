@@ -1,5 +1,5 @@
 {
-  "name": "rnd",
+  "name": "react-rnd2",
   "version": "1.0.1",
   "description": "",
   "module": "./lib/rnd.js",
@@ -7,7 +7,7 @@
   "scripts": {
     "tsc": "tsc"
   },
-  "author": "",
+  "author": "FishOrBear",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^11.13.8",
